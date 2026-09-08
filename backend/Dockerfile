@@ -1,4 +1,4 @@
-# Rushes backend for Cloud Run.
+# Rushes backend. Railway builds this via railway.json; it also runs on Cloud Run.
 #
 # Two virtualenvs on purpose. The app needs mcp<2 (pinned by google-adk[mcp]),
 # while the mcp-clickhouse server needs fastmcp>=4 and therefore mcp>=2. They
@@ -6,7 +6,8 @@
 # spawned over stdio, so an isolated interpreter costs nothing at runtime.
 #
 # The directory layout mirrors the repository because rushes.config derives
-# REPO_ROOT from the package location: /app/backend/src/rushes -> /app.
+# REPO_ROOT from the package location; PYTHONPATH further down is what makes
+# that derivation land on /app rather than inside the venv.
 FROM python:3.12-slim AS base
 
 ENV PYTHONUNBUFFERED=1 \
@@ -40,8 +41,20 @@ RUN python -m venv /app/mcp-server/.venv \
 RUN mkdir -p /app/data/clips
 COPY data/clips /app/data/clips
 
-# Cloud Run injects PORT; rushes.api.main reads it via Settings.port.
+# The platform injects PORT; rushes.api.main reads it via Settings.port.
+#
+# PYTHONPATH pins `import rushes` to the source tree rather than the copy pip
+# placed in site-packages. Both are importable and identical, but only the
+# source path makes rushes.config's `Path(__file__).parents[3]` land on /app —
+# from site-packages it lands on /app/backend/.venv/lib, and two runtime paths
+# hang off that root, both of which fail silently. The MCP command falls back
+# to `uvx mcp-clickhouse`, absent from this image, so the ClickHouse lane goes
+# offline with nothing but a warning; and clips_dir points somewhere api.py
+# then creates empty, so every baked clip 404s behind a working play button.
+# The pip install above still earns its keep: dependency resolution and the
+# rushes-api entry point.
 ENV PORT=8080 \
+    PYTHONPATH=/app/backend/src \
     PATH="/app/backend/.venv/bin:${PATH}"
 EXPOSE 8080
 
