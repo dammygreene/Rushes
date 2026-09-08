@@ -14,6 +14,10 @@ it came from** and **why it matched**.
 
 Built for the Google Agentic Cinema Hackathon, ClickHouse track. MIT licensed.
 
+**Live demo:** https://rushes-dev.vercel.app
+**Demo video:** https://youtu.be/JH339oMsrBw
+
+[![Watch the demo](https://img.youtube.com/vi/JH339oMsrBw/maxresdefault.jpg)](https://youtu.be/JH339oMsrBw)
 ---
 
 ## How it works
