@@ -1,0 +1,34 @@
+# Cloud Build for the Rushes backend.
+#
+#   gcloud builds submit . --config cloudbuild.yaml --substitutions _PROJECT=<id>
+#
+# Submitted from the repository root on purpose. backend/Dockerfile's COPY paths
+# are root-relative (backend/src, data/clips) because rushes.config derives
+# REPO_ROOT from the installed package location, so the image has to mirror the
+# repo. `gcloud builds submit backend --tag …` would set the context to backend/
+# and fail on the first COPY.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file=backend/Dockerfile
+      - --tag=gcr.io/${_PROJECT}/rushes-api:${_TAG}
+      - --tag=gcr.io/${_PROJECT}/rushes-api:latest
+      - .
+
+images:
+  - gcr.io/${_PROJECT}/rushes-api:${_TAG}
+  - gcr.io/${_PROJECT}/rushes-api:latest
+
+substitutions:
+  # Defaults to the project the build runs in; override with --substitutions.
+  _PROJECT: ${PROJECT_ID}
+  # BUILD_ID rather than SHORT_SHA: `builds submit` uploads a tarball, not a git
+  # ref, so SHORT_SHA is empty here and would produce an invalid bare-colon tag.
+  _TAG: ${BUILD_ID}
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
+# The 50 MB of seeded clips plus two virtualenvs; comfortable, not tight.
+timeout: 1200s

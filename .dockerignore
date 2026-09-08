@@ -1,0 +1,28 @@
+# Build context is the repository root:
+#   docker build -f backend/Dockerfile -t rushes-api .
+
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/*.egg-info
+
+.git
+.github
+.claude
+.env
+.env.*
+!.env.example
+
+# The frontend deploys to Vercel, not into this image.
+frontend
+
+# data/clips IS baked in — see backend/Dockerfile. Captions and the seeding
+# JSONL are pipeline inputs that never run inside the container, so they stay out.
+data/captions
+data/*.jsonl
+docs
+
+# Root-level docs only: backend/README.md stays, because backend/pyproject.toml
+# declares it as the package readme.
+*.md

@@ -1,0 +1,44 @@
+# What `railway up` uploads as the Docker build context.
+#
+# Deliberately explicit rather than leaning on .gitignore. Railway also honours
+# .gitignore, and in a working checkout that file excludes data/clips — which
+# would hand the build an empty archive and put us straight back into the bug
+# this deployment exists to avoid. Listing the exclusions here means the context
+# is the same whichever tree it is run from.
+#
+# data/clips is NOT excluded. backend/Dockerfile bakes those 20 clips in.
+
+.git
+.gitignore
+.railwayignore
+.gcloudignore
+
+# Secrets come from `railway variables`, never from a file in the image.
+.env
+.env.local
+.env.*.local
+
+# Rebuilt inside the container. Uploading a Windows-built venv into a Linux
+# image is both slow and wrong.
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+*.egg-info/
+
+# The frontend deploys to Vercel, not into this image.
+frontend/
+
+# Pipeline inputs and local tooling: never executed at runtime.
+data/captions/
+data/*.jsonl
+docs/
+scripts/
+.agents/
+.claude/
+.shots/
+skills-lock.json
+rushes-blueprint.md
+cloudbuild.yaml

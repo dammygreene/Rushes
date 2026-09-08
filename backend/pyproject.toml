@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rushes"
+version = "0.1.0"
+description = "Natural-language video search across a private archive and public sources"
+# setuptools refuses a readme outside the project directory, so this is a short
+# pointer file; the real documentation is the repo-root README.
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+license = { text = "MIT" }
+dependencies = [
+    # Agent orchestration + Gemini. The [mcp] extra pins mcp<2, which is the
+    # client library the ClickHouse MCP session in rushes/clickhouse/mcp_client.py
+    # is written against.
+    "google-adk[mcp]==2.8.0",
+    "fastapi==0.141.1",
+    "uvicorn[standard]==0.52.4",
+    "httpx==0.28.1",
+    "pydantic-settings==2.15.0",
+    "python-dotenv==1.2.3",
+    "tenacity==9.1.4",
+    # Direct client, used only for DDL + INSERT during seeding. All read paths
+    # go through the mcp-clickhouse MCP server.
+    "clickhouse-connect==1.8.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.1.1",
+    "pytest-asyncio==1.4.0",
+]
+
+[project.scripts]
+rushes-api = "rushes.api:main"
+rushes-doctor = "rushes.pipeline.doctor:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+filterwarnings = ["ignore::DeprecationWarning"]

@@ -1,0 +1,47 @@
+# --- secrets ---
+# Broad on purpose: this repository is public, so a pattern that is too narrow
+# costs a leaked key while one that is too wide costs a missing file. `.env.*`
+# therefore catches every variant — .env.local, .env.production, .env.bak — and
+# .env.example is the single deliberate exception, re-included below.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*-service-account.json
+credentials.json
+
+# --- python ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# --- node / next ---
+node_modules/
+.next/
+out/
+.vercel/
+next-env.d.ts
+*.tsbuildinfo
+
+# --- seeded media + pipeline artifacts ---
+# data/clips and data/captions ARE tracked here, unlike a working checkout. The
+# 20 clips are the archive the demo searches and backend/Dockerfile bakes them
+# into the Cloud Run image, so a fresh clone has to carry them or the deployed
+# archive lane serves 404s. All Pexels, CC0, ~50 MB total.
+data/*.jsonl
+
+# --- os / editor ---
+.DS_Store
+Thumbs.db
+*.log
+
+# --- local review artifacts (screenshots taken while working on the UI) ---
+.shots/

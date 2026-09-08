@@ -1,0 +1,41 @@
+# What `gcloud builds submit .` uploads as the build context.
+#
+# Without this file gcloud falls back to .gitignore, which mostly works — but
+# relying on that couples the build context to git bookkeeping. Spelled out here
+# instead, because one entry differs in a way that matters: data/clips MUST go up.
+# backend/Dockerfile bakes those 20 clips in, and an image without them serves a
+# play button that 404s on every archive hit.
+
+.git
+.gitignore
+.gcloudignore
+
+# Never upload secrets. Cloud Run gets these from Secret Manager and
+# --set-env-vars, never from a file in the image.
+.env
+.env.local
+.env.*.local
+
+# Rebuilt inside the container; uploading them wastes minutes and risks shipping
+# Windows-built artifacts into a Linux image.
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.ruff_cache/
+**/.mypy_cache/
+*.egg-info/
+
+# The frontend deploys to Vercel, not into this image.
+frontend/
+
+# Pipeline inputs and local tooling: not used at runtime.
+data/captions/
+data/*.jsonl
+docs/
+scripts/
+.agents/
+.claude/
+.shots/
+skills-lock.json
+rushes-blueprint.md
