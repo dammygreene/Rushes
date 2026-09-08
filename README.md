@@ -356,11 +356,11 @@ frontend/
     page.tsx          the search screen (a Suspense shell around SearchView)
     history/, saved/  what this browser remembers
     api/              route handlers proxying the backend
-    icon.png          tab icon, trimmed from rushes-fav.png at the repo root
+    icon.png          tab icon (Next.js file-based metadata)
   components/         SearchView, ResultsGrid, ResultCard, HistoryView, SavedView, …
   lib/store.ts        localStorage: past searches and saved shots
   lib/types.ts        mirror of models.py
-  public/             rushes-logo.png, trimmed from the master at the repo root
+  public/             rushes-logo.png, served at /rushes-logo.png
 ```
 
 ---
