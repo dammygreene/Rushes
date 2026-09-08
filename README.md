@@ -593,6 +593,23 @@ PUBLIC_BASE_URL=<the URL Cloud Run printed>`.
 
 ---
 
+## Credits
+
+The sample archive is not our own footage. It is built during seeding from
+[Pexels](https://www.pexels.com) videos, which is why every seeded row carries
+`license: "Pexels License — Pixabay (sample archive)"` and why those clips are
+the only ones the app will ever play inline. The Pexels License asks for no
+attribution, but the people who shot those clips are the reason this demo has
+anything to search, so they get a credit anyway. Point `data/clips/` at your own
+rushes and this section stops applying to you.
+
+Live results come from the [YouTube Data API](https://developers.google.com/youtube/v3),
+the [Internet Archive](https://archive.org) advanced-search API and the
+[Pexels Video API](https://www.pexels.com/api/). None of that footage is stored —
+see [We never rehost anyone else's video](#we-never-rehost-anyone-elses-video).
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE). The code is ours to give away; the footage behind
